@@ -1,4 +1,4 @@
-import { GridItem, useColorModeValue, Text } from "@chakra-ui/react";
+import { GridItem, useColorModeValue } from "@chakra-ui/react";
 import CardImage from "./CardImage";
 
 export default function GameCard({card, toggleCard, isSelected}) {

@@ -1,22 +1,10 @@
 import { useState, useEffect } from 'react';
-import {
-  ChakraProvider,
-  Box,
-  Text,
-  Link,
-  VStack,
-  Code,
-  Grid,
-  GridItem,
-  theme,
-  useColorModeValue,
-  Button,
-} from '@chakra-ui/react';
+import { ChakraProvider, theme, Grid } from '@chakra-ui/react';
 import { ColorModeSwitcher } from './ColorModeSwitcher';
-import GameCard from './components/GameCard';
 import { createDeck, findSet, makeBoard, isSet } from './logic/game';
 import SVGPatterns from './components/SVGPatterns';
 import GameGrid from './components/GameGrid';
+import LoginCard from './components/LoginCard';
 
 function App() {
   const [deck, setDeck] = useState(createDeck());
@@ -43,34 +31,37 @@ function App() {
       <SVGPatterns />
       <Grid p={3}>
         <ColorModeSwitcher justifySelf="flex-end" />
-        <GameGrid
-          board={board}
-          selected={selected}
-          statusText={statusText}
-          toggleCard={x =>
-            setSelected(prevSelected => {
-              const newSelected = [...prevSelected];
-              newSelected[x] = !newSelected[x];
-              return newSelected;
-            })
-          }
-          helpSelect={() => {
-            setSelected(prevSelected => {
-              const newSelected = [...prevSelected];
-              newSelected.forEach((_, i) => {
-                newSelected[i] = false;
-              });
-
-              let solution = findSet(board);
-              if (solution) {
-                solution.forEach(idx => {
-                  newSelected[idx] = true;
+        {false && (
+          <GameGrid
+            board={board}
+            selected={selected}
+            statusText={statusText}
+            toggleCard={x =>
+              setSelected(prevSelected => {
+                const newSelected = [...prevSelected];
+                newSelected[x] = !newSelected[x];
+                return newSelected;
+              })
+            }
+            helpSelect={() => {
+              setSelected(prevSelected => {
+                const newSelected = [...prevSelected];
+                newSelected.forEach((_, i) => {
+                  newSelected[i] = false;
                 });
-              }
-              return newSelected;
-            });
-          }}
-        />
+
+                let solution = findSet(board);
+                if (solution) {
+                  solution.forEach(idx => {
+                    newSelected[idx] = true;
+                  });
+                }
+                return newSelected;
+              });
+            }}
+          />
+        )}
+        {true && <LoginCard />}
       </Grid>
     </ChakraProvider>
   );

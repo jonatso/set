@@ -1,4 +1,4 @@
-import React from 'react';
+import { useState, useEffect } from 'react';
 import {
   ChakraProvider,
   Box,
@@ -7,34 +7,71 @@ import {
   VStack,
   Code,
   Grid,
+  GridItem,
   theme,
+  useColorModeValue,
+  Button,
 } from '@chakra-ui/react';
 import { ColorModeSwitcher } from './ColorModeSwitcher';
-import { Logo } from './Logo';
+import GameCard from './components/GameCard';
+import { createDeck, findSet, makeBoard, isSet } from './logic/game';
+import SVGPatterns from './components/SVGPatterns';
+import GameGrid from './components/GameGrid';
 
 function App() {
+  const [deck, setDeck] = useState(createDeck());
+  const [board, setBoard] = useState(makeBoard(deck));
+  const [selected, setSelected] = useState(board.map(() => false));
+
+  const [statusText, setStatusText] = useState('');
+
+  useEffect(() => {
+    if (selected.filter(x => x).length === 3) {
+      const selectedCards = board.filter((_, i) => selected[i]);
+      if (isSet(...selectedCards)) {
+        setStatusText('Set found!');
+      } else {
+        setStatusText('Not a set.');
+      }
+    } else {
+      setStatusText('Must choose 3 cards.');
+    }
+  }, [board, selected]);
+
   return (
     <ChakraProvider theme={theme}>
-      <Box textAlign="center" fontSize="xl">
-        <Grid minH="100vh" p={3}>
-          <ColorModeSwitcher justifySelf="flex-end" />
-          <VStack spacing={8}>
-            <Logo h="40vmin" pointerEvents="none" />
-            <Text>
-              Edit <Code fontSize="xl">src/App.js</Code> and save to reload.
-            </Text>
-            <Link
-              color="teal.500"
-              href="https://chakra-ui.com"
-              fontSize="2xl"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Learn Chakra
-            </Link>
-          </VStack>
-        </Grid>
-      </Box>
+      <SVGPatterns />
+      <Grid p={3}>
+        <ColorModeSwitcher justifySelf="flex-end" />
+        <GameGrid
+          board={board}
+          selected={selected}
+          statusText={statusText}
+          toggleCard={x =>
+            setSelected(prevSelected => {
+              const newSelected = [...prevSelected];
+              newSelected[x] = !newSelected[x];
+              return newSelected;
+            })
+          }
+          helpSelect={() => {
+            setSelected(prevSelected => {
+              const newSelected = [...prevSelected];
+              newSelected.forEach((_, i) => {
+                newSelected[i] = false;
+              });
+
+              let solution = findSet(board);
+              if (solution) {
+                solution.forEach(idx => {
+                  newSelected[idx] = true;
+                });
+              }
+              return newSelected;
+            });
+          }}
+        />
+      </Grid>
     </ChakraProvider>
   );
 }

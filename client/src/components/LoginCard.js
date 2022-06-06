@@ -14,7 +14,7 @@ import {
 import { FaArrowRight, FaPlus } from 'react-icons/fa';
 import { useState } from 'react';
 
-export default function LoginCard() {
+export default function LoginCard({ joinRoomError, clickJoin, clickCreate }) {
   const [gameCodeInputText, setGameCodeInputText] = useState(
     window.location.pathname.substring(1)
   );
@@ -59,6 +59,7 @@ export default function LoginCard() {
                 bg: 'blue.500',
               }}
               leftIcon={<FaPlus />}
+              onClick={clickCreate}
             >
               Create game
             </Button>
@@ -77,9 +78,13 @@ export default function LoginCard() {
                 bg: 'blue.500',
               }}
               leftIcon={<FaArrowRight />}
+              onClick={() => clickJoin(gameCodeInputText)}
             >
               Join game
             </Button>
+            <Text fontSize={'sm'} color={'red.500'}>
+              {joinRoomError}
+            </Text>
           </Stack>
         </Box>
       </Stack>

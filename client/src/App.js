@@ -1,15 +1,28 @@
 import { useState, useEffect } from 'react';
-import { ChakraProvider, theme, Grid } from '@chakra-ui/react';
+import {
+  ChakraProvider,
+  theme,
+  Grid,
+  useColorModeValue,
+} from '@chakra-ui/react';
 import { ColorModeSwitcher } from './ColorModeSwitcher';
 import { createDeck, findSet, makeBoard, isSet } from './logic/game';
 import SVGPatterns from './components/SVGPatterns';
 import GameGrid from './components/GameGrid';
 import LoginCard from './components/LoginCard';
+import WaitingRoom from './components/WaitingRoom';
 
 function App() {
-  const [deck, setDeck] = useState(createDeck());
-  const [board, setBoard] = useState(makeBoard(deck));
+  const [board, setBoard] = useState([]);
+  const [gameState, setGameState] = useState('login');
   const [selected, setSelected] = useState(board.map(() => false));
+  const [gameCode, setGameCode] = useState('');
+  const [players, setPlayers] = useState([
+    { id: 0, name: 'jonas' },
+    { id: 1, name: 'bob' },
+    { id: 2, name: 'carmen' },
+  ]);
+  const [yourName, setYourName] = useState('bob');
 
   const [statusText, setStatusText] = useState('');
 
@@ -31,7 +44,7 @@ function App() {
       <SVGPatterns />
       <Grid p={3}>
         <ColorModeSwitcher justifySelf="flex-end" />
-        {false && (
+        {gameState === 'inGame' && (
           <GameGrid
             board={board}
             selected={selected}
@@ -61,7 +74,14 @@ function App() {
             }}
           />
         )}
-        {true && <LoginCard />}
+        {gameState === 'login' && <LoginCard />}
+        {gameState === 'waitingRoom' && (
+          <WaitingRoom
+            players={players}
+            gameCode={gameCode}
+            yourName={yourName}
+          />
+        )}
       </Grid>
     </ChakraProvider>
   );

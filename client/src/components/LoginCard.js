@@ -12,14 +12,21 @@ import {
   useColorModeValue,
 } from '@chakra-ui/react';
 import { FaArrowRight, FaPlus } from 'react-icons/fa';
+import { useState } from 'react';
 
 export default function LoginCard() {
+  const [gameCodeInputText, setGameCodeInputText] = useState(
+    window.location.pathname.substring(1)
+  );
+  function handleGameCodeInput(event) {
+    setGameCodeInputText(event.target.value);
+  }
   return (
     <Flex
       minH={'100%'}
       align={'center'}
       justify={'center'}
-      bg={useColorModeValue('gray.50', 'gray.800')}
+      //   bg={useColorModeValue('gray.50', 'gray.800')}
     >
       <Stack spacing={8} mx={'auto'} maxW={'lg'} py={12} px={6}>
         <Stack align={'center'}>
@@ -57,7 +64,11 @@ export default function LoginCard() {
             </Button>
             <FormControl id="text">
               <FormLabel>Game code</FormLabel>
-              <Input type="text" />
+              <Input
+                type="text"
+                value={gameCodeInputText}
+                onChange={handleGameCodeInput}
+              />
             </FormControl>
             <Button
               bg={'blue.400'}

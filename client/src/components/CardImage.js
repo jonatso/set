@@ -13,7 +13,7 @@ export default function CardImage({ card }) {
 
   return (
     <Flex justifyContent="center" alignItems="center" height={100}>
-      {Array.from({ length: card[3] + 1 }, () => (
+      {Array.from({ length: card[3] + 1 }, (_, i) => (
         <svg
           // style={{
           //   border: 'dotted 2px pink',
@@ -23,6 +23,7 @@ export default function CardImage({ card }) {
           width="50"
           transform="scale(.7)"
           overflow={'visible'}
+          key={i}
         >
           <path
             d={[paths[card[0]]]}

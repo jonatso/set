@@ -8,6 +8,7 @@ import LoginCard from './components/LoginCard';
 import WaitingRoom from './components/WaitingRoom';
 import socketIOClient from 'socket.io-client';
 import { MdReport } from 'react-icons/md';
+import { IoLogoGameControllerA } from 'react-icons/io';
 const ENDPOINT = 'http://localhost:3001';
 var socket;
 
@@ -32,6 +33,7 @@ function App() {
   const [statusText, setStatusText] = useState('');
   const [joinRoomError, setJoinRoomError] = useState('');
   const [gameOwner, setGameOwner] = useState('');
+  const [socketToPoints, setSocketToPoints] = useState({});
   const toast = useToast();
 
   useEffect(() => {
@@ -85,6 +87,18 @@ function App() {
     socket.on('gameStarted', ({ board, socketToPoints }) => {
       setBoard(board);
       setGameState('inGame');
+      setSocketToPoints(socketToPoints);
+      if (!toast.isActive('gameStarted')) {
+        toast({
+          id: 'gameStarted',
+          title: 'The game has started! 🎉',
+          description: 'Go find a SET!',
+          status: 'success',
+          duration: 3000,
+          isClosable: true,
+          icon: <IoLogoGameControllerA />,
+        });
+      }
     });
 
     socket.on('disconnect', () => {
@@ -112,8 +126,9 @@ function App() {
       }
     });
 
-    socket.on('startGame', gameState => {
-      setGameState(gameState);
+    socket.on('gameStateUpdate', ({ board, socketToPoints }) => {
+      setBoard(board);
+      setSocketToPoints(socketToPoints);
     });
 
     socket.on('playersUpdate', ({ players, gameOwner }) => {
@@ -132,8 +147,18 @@ function App() {
       // setGameHasStarted(false);
     });
 
-    socket.on('moveError', message => {
-      console.log(message);
+    socket.on('setAccepted', () => {
+      if (!toast.isActive('setAccepted')) {
+        toast({
+          id: 'setAccepted',
+          title: 'Set accepted! 🎉',
+          description: '+1 point to your score!',
+          status: 'success',
+          duration: 1000,
+          isClosable: true,
+          icon: <IoLogoGameControllerA />,
+        });
+      }
     });
 
     socket.on('badCode', msg => {
@@ -141,10 +166,21 @@ function App() {
       console.log(msg);
     });
 
-    socket.on('gameEnded', gameState => {
-      // setGameState(gameState);
-      // setGameIsEnded(true);
-      // setConnectText(getWinnerText());
+    socket.on('gameEnded', socketToPoints => {
+      setSocketToPoints(socketToPoints);
+      console.log('socketToPoints', socketToPoints);
+      console.log('yourId', yourId);
+      if (!toast.isActive('gameEnded')) {
+        toast({
+          id: 'gameEnded',
+          title: 'Game over! 🎉',
+          description: 'Your score is: ' + socketToPoints[yourId],
+          status: 'success',
+          duration: 3000,
+          isClosable: true,
+          icon: <IoLogoGameControllerA />,
+        });
+      }
     });
   }, []);
 
@@ -153,13 +189,31 @@ function App() {
       const selectedCards = board.filter((_, i) => selected[i]);
       if (isSet(...selectedCards)) {
         setStatusText('Set found!');
+        socket.emit('setFound', selected);
       } else {
         setStatusText('Not a set.');
+
+        if (!toast.isActive('notASet')) {
+          toast({
+            id: 'notASet',
+            title: 'Not a set! 😬',
+            description: 'Try again.',
+            status: 'error',
+            duration: 1000,
+            isClosable: true,
+            icon: <MdReport />,
+          });
+        }
       }
+      setSelected(selected.map(() => false));
     } else {
       setStatusText('Must choose 3 cards.');
     }
   }, [board, selected]);
+
+  useEffect(() => {
+    console.log('id changed: ', yourId);
+  }, [yourId]);
 
   return (
     <ChakraProvider theme={theme}>
@@ -194,6 +248,10 @@ function App() {
                 return newSelected;
               });
             }}
+            socketToPoints={socketToPoints}
+            players={players}
+            yourId={yourId}
+            gameCode={gameCode}
           />
         )}
         {gameState === 'login' && (

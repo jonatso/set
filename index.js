@@ -10,6 +10,7 @@ app.use(express.static("client/build"));
 
 const server = http.createServer(app);
 var _ = require("lodash");
+const { isSet } = require("util/types");
 
 const io = new Server(server, {
     cors: {
@@ -36,6 +37,7 @@ io.on("connection", (socket) => {
     socket.on("createGame", handleCreateGame);
     socket.on("makeMove", handleMakeMove);
     socket.on("startGame", handleStartGame);
+    socket.on("setFound", handleSetFound);
 
     function handleJoinGame(roomName) {
         console.log(`${socketToName[socket.id]} is trying to join ${roomName}`);
@@ -80,6 +82,20 @@ io.on("connection", (socket) => {
             })),
             gameOwner: roomToOwner[roomName],
         });
+
+        if (gameStates[roomName].isGameStarted) {
+            gameStates[roomName].socketToPoints[socket.id] = 0;
+
+            socket.emit("gameStarted", {
+                board: gameStates[roomName].board,
+                socketToPoints: gameStates[roomName].socketToPoints,
+            });
+
+            socket.broadcast.to(roomName).emit("gameStateUpdate", {
+                board: gameStates[roomName].board,
+                socketToPoints: gameStates[roomName].socketToPoints,
+            });
+        }
     }
 
     function handleCreateGame() {
@@ -138,6 +154,10 @@ io.on("connection", (socket) => {
                         gameOwner: roomToOwner[roomName],
                     });
                 });
+            } else {
+                delete roomToOwner[roomName];
+                delete gameStates[roomName];
+                console.log("deleted room: " + roomName);
             }
         }
 
@@ -156,7 +176,43 @@ io.on("connection", (socket) => {
         gameStates[roomName].socketToPoints = socketToPoints;
 
         console.log(`${socketToName[socket.id]} started game ${roomName}`);
-        io.to(roomName).emit("gameStarted", gameStates[roomName]);
+        io.to(roomName).emit("gameStarted", {
+            board: gameStates[roomName].board,
+            socketToPoints: gameStates[roomName].socketToPoints,
+        });
+    }
+
+    function handleSetFound(selected) {
+        console.log(`${socketToName[socket.id]} found set`);
+        const roomName = socketToRoom[socket.id];
+        const socketToPoints = gameStates[roomName].socketToPoints;
+        const board = gameStates[roomName].board;
+
+        if (selected.filter((x) => x).length === 3) {
+            const selectedCards = board.filter((_, i) => selected[i]);
+            if (gameLogic.isSet(...selectedCards)) {
+                socketToPoints[socket.id] += 1;
+                socket.emit("setAccepted");
+                gameLogic.removeSelectedCards(board, selected);
+                if (gameLogic.fixBoard(board, gameStates[roomName].deck)) {
+                    io.to(roomName).emit("gameStateUpdate", {
+                        board,
+                        socketToPoints,
+                    });
+                } else {
+                    io.to(roomName).emit("gameEnded", socketToPoints);
+                }
+
+                io.to(roomName).emit("gameStateUpdate", {
+                    board,
+                    socketToPoints,
+                });
+            } else {
+                console.log("false set received");
+            }
+        } else {
+            console.log("wrong length set received");
+        }
     }
 
     function handleMakeMove(data) {

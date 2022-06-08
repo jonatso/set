@@ -34,9 +34,10 @@ export default function WaitingRoom({
 }) {
   const toast = useToast();
   const isOwner = gameOwner === yourId;
+  console.log('yourId', yourId);
 
   return (
-    <Stack spacing={4}>
+    <Stack spacing={4} justifySelf="center">
       <Heading fontSize={'4xl'}>
         Welcome to the Waiting Room, {yourName}
       </Heading>
@@ -52,14 +53,17 @@ export default function WaitingRoom({
           size={'sm'}
           onClick={() => {
             navigator.clipboard.writeText(`localhost:3000/${gameCode}`);
-            toast({
-              title: 'Copied to clipboard',
-              description: `localhost:3000/${gameCode}`,
-              status: 'success',
-              duration: 2000,
-              isClosable: true,
-              icon: <FaCopy />,
-            });
+            if (!toast.isActive('copyGameCode')) {
+              toast({
+                id: 'copyGameCode',
+                title: 'Copied to clipboard',
+                description: `localhost:3000/${gameCode}`,
+                status: 'success',
+                duration: 2000,
+                isClosable: true,
+                icon: <FaCopy />,
+              });
+            }
           }}
         />
       </HStack>
@@ -75,7 +79,10 @@ export default function WaitingRoom({
           </Thead>
           <Tbody>
             {players.map(player => (
-              <Tr fontWeight={player.id === yourId ? 'bold' : 'normal'}>
+              <Tr
+                fontWeight={player.id === yourId ? 'bold' : 'normal'}
+                key={player.id}
+              >
                 <Td>{player.name}</Td>
                 <Td>{player.id}</Td>
                 <Td>{player.id === gameOwner ? 'yes' : 'no'}</Td>

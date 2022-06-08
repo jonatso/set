@@ -84,7 +84,9 @@ io.on("connection", (socket) => {
         });
 
         if (gameStates[roomName].isGameStarted) {
-            gameStates[roomName].socketToPoints[socket.id] = 0;
+            if (!(socket.id in gameStates[roomName].socketToPoints)) {
+                gameStates[roomName].socketToPoints[socket.id] = 0;
+            }
 
             socket.emit("gameStarted", {
                 board: gameStates[roomName].board,
@@ -178,7 +180,7 @@ io.on("connection", (socket) => {
         console.log(`${socketToName[socket.id]} started game ${roomName}`);
         io.to(roomName).emit("gameStarted", {
             board: gameStates[roomName].board,
-            socketToPoints: gameStates[roomName].socketToPoints,
+            socketToPoints,
         });
     }
 

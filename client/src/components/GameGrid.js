@@ -30,6 +30,7 @@ export default function GameGrid({
   players,
   yourId,
   gameCode,
+  clickLeave,
 }) {
   const toast = useToast();
 
@@ -97,7 +98,12 @@ export default function GameGrid({
           <Button colorScheme={'green'} onClick={helpSelect}>
             Cheat...
           </Button>
-          <Button colorScheme="red" rightIcon={<ImCross />} width="fit-content">
+          <Button
+            colorScheme="red"
+            rightIcon={<ImCross />}
+            width="fit-content"
+            onClick={clickLeave}
+          >
             Leave room
           </Button>
         </ButtonGroup>

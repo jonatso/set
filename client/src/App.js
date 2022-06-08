@@ -169,12 +169,11 @@ function App() {
     socket.on('gameEnded', socketToPoints => {
       setSocketToPoints(socketToPoints);
       console.log('socketToPoints', socketToPoints);
-      console.log('yourId', yourId);
       if (!toast.isActive('gameEnded')) {
         toast({
           id: 'gameEnded',
           title: 'Game over! 🎉',
-          description: 'Your score is: ' + socketToPoints[yourId],
+          description: `Your score is: ${socketToPoints[yourId]}`,
           status: 'success',
           duration: 3000,
           isClosable: true,
@@ -210,10 +209,6 @@ function App() {
       setStatusText('Must choose 3 cards.');
     }
   }, [board, selected]);
-
-  useEffect(() => {
-    console.log('id changed: ', yourId);
-  }, [yourId]);
 
   return (
     <ChakraProvider theme={theme}>
@@ -252,6 +247,7 @@ function App() {
             players={players}
             yourId={yourId}
             gameCode={gameCode}
+            clickLeave={clickLeave}
           />
         )}
         {gameState === 'login' && (

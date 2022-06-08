@@ -34,7 +34,6 @@ export default function WaitingRoom({
 }) {
   const toast = useToast();
   const isOwner = gameOwner === yourId;
-  console.log('yourId', yourId);
 
   return (
     <Stack spacing={4} justifySelf="center">

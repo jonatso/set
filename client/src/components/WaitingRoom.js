@@ -15,10 +15,13 @@ import {
   TableContainer,
   TableCaption,
   Tfoot,
+  IconButton,
+  HStack,
+  ButtonGroup,
 } from '@chakra-ui/react';
-import { FaCopy, FaPlay } from 'react-icons/fa';
+import { FaCopy, FaPlay, FaRegCopy } from 'react-icons/fa';
 
-import { ImCross } from 'react-icons/im';
+import { ImCopy, ImCross } from 'react-icons/im';
 
 export default function WaitingRoom({
   players,
@@ -37,28 +40,30 @@ export default function WaitingRoom({
       <Heading fontSize={'4xl'}>
         Welcome to the Waiting Room, {yourName}
       </Heading>
-      <Heading fontSize={'lg'}>
-        Game Code: <Text color="red">{gameCode}</Text>
-      </Heading>
-      <Button
-        colorScheme="teal"
-        rightIcon={<FaCopy />}
-        width="fit-content"
-        onClick={() => {
-          navigator.clipboard.writeText(`localhost:3000/${gameCode}`);
-          toast({
-            title: 'Copied to clipboard',
-            description: `localhost:3000/${gameCode}`,
-            status: 'success',
-            duration: 2000,
-            isClosable: true,
-            icon: <FaCopy />,
-          });
-        }}
-      >
-        Copy link
-      </Button>
-      <Heading fontSize={'lg'}>Players</Heading>
+      <HStack>
+        <Heading fontSize={'lg'}>Game Code:</Heading>
+        <Heading fontSize={'lg'} color="red">
+          {gameCode}
+        </Heading>
+        <IconButton
+          // colorScheme="teal"
+          icon={<FaCopy />}
+          width="fit-content"
+          size={'sm'}
+          onClick={() => {
+            navigator.clipboard.writeText(`localhost:3000/${gameCode}`);
+            toast({
+              title: 'Copied to clipboard',
+              description: `localhost:3000/${gameCode}`,
+              status: 'success',
+              duration: 2000,
+              isClosable: true,
+              icon: <FaCopy />,
+            });
+          }}
+        />
+      </HStack>
+
       <TableContainer width={'fit-content'}>
         <Table variant="striped">
           <Thead>
@@ -80,24 +85,26 @@ export default function WaitingRoom({
         </Table>
       </TableContainer>
 
-      {isOwner && (
+      <ButtonGroup>
+        {isOwner && (
+          <Button
+            colorScheme="green"
+            rightIcon={<FaPlay />}
+            width="fit-content"
+            onClick={clickStart}
+          >
+            Start game!
+          </Button>
+        )}
         <Button
-          colorScheme="green"
-          rightIcon={<FaPlay />}
+          colorScheme="red"
+          rightIcon={<ImCross />}
           width="fit-content"
-          onClick={clickStart}
+          onClick={clickLeave}
         >
-          Start game!
+          Leave room
         </Button>
-      )}
-      <Button
-        colorScheme="red"
-        rightIcon={<ImCross />}
-        width="fit-content"
-        onClick={clickLeave}
-      >
-        Leave room
-      </Button>
+      </ButtonGroup>
     </Stack>
   );
 }

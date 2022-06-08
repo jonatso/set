@@ -35,6 +35,7 @@ io.on("connection", (socket) => {
     socket.on("joinGame", handleJoinGame);
     socket.on("createGame", handleCreateGame);
     socket.on("makeMove", handleMakeMove);
+    socket.on("startGame", handleStartGame);
 
     function handleJoinGame(roomName) {
         console.log(`${socketToName[socket.id]} is trying to join ${roomName}`);
@@ -143,6 +144,21 @@ io.on("connection", (socket) => {
         //delete gameStates[roomName];
     }
 
+    function handleStartGame() {
+        const roomName = socketToRoom[socket.id];
+        gameStates[roomName].isGameStarted = true;
+        const socketToPoints = {};
+        const room = io.sockets.adapter.rooms.get(roomName);
+        room.forEach((socketId) => {
+            socketToPoints[socketId] = 0;
+        });
+
+        gameStates[roomName].socketToPoints = socketToPoints;
+
+        console.log(`${socketToName[socket.id]} started game ${roomName}`);
+        io.to(roomName).emit("gameStarted", gameStates[roomName]);
+    }
+
     function handleMakeMove(data) {
         const roomName = socketToRoom[socket.id];
         const gameState = gameStates[roomName];
@@ -184,27 +200,12 @@ function makeid(length) {
 }
 
 function createGameState() {
+    const deck = gameLogic.createDeck();
+    const board = gameLogic.makeBoard(deck);
+
     return {
-        board: [
-            ["", "", "", "", "", "", "", ""],
-            ["", "", "", "", "", "", "", ""],
-            ["", "", "", "", "", "", "", ""],
-            ["", "", "", "w", "b", "", "", ""],
-            ["", "", "", "b", "w", "", "", ""],
-            ["", "", "", "", "", "", "", ""],
-            ["", "", "", "", "", "", "", ""],
-            ["", "", "", "", "", "", "", ""],
-        ],
-        possibleMovesBoard: [
-            ["", "", "", "", "", "", "", ""],
-            ["", "", "", "", "", "", "", ""],
-            ["", "", "", "", "w", "", "", ""],
-            ["", "", "", "", "", "w", "", ""],
-            ["", "", "w", "", "", "", "", ""],
-            ["", "", "", "w", "", "", "", ""],
-            ["", "", "", "", "", "", "", ""],
-            ["", "", "", "", "", "", "", ""],
-        ],
-        isWhitesTurn: true,
+        board,
+        deck,
+        isGameStarted: false,
     };
 }

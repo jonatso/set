@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { ChakraProvider, theme, Grid } from '@chakra-ui/react';
+import { ChakraProvider, theme, Grid, useToast } from '@chakra-ui/react';
 import { ColorModeSwitcher } from './ColorModeSwitcher';
 import { createDeck, findSet, makeBoard, isSet } from './logic/game';
 import SVGPatterns from './components/SVGPatterns';
@@ -7,6 +7,7 @@ import GameGrid from './components/GameGrid';
 import LoginCard from './components/LoginCard';
 import WaitingRoom from './components/WaitingRoom';
 import socketIOClient from 'socket.io-client';
+import { MdReport } from 'react-icons/md';
 const ENDPOINT = 'http://localhost:3001';
 var socket;
 
@@ -31,6 +32,7 @@ function App() {
   const [statusText, setStatusText] = useState('');
   const [joinRoomError, setJoinRoomError] = useState('');
   const [gameOwner, setGameOwner] = useState('');
+  const toast = useToast();
 
   useEffect(() => {
     const codeFromUrl = window.location.pathname.substring(1);
@@ -78,6 +80,36 @@ function App() {
       setGameState('waitingRoom');
       setGameOwner(gameOwner);
       setYourId(id);
+    });
+
+    socket.on('gameStarted', ({ board, socketToPoints }) => {
+      setBoard(board);
+      setGameState('inGame');
+    });
+
+    socket.on('disconnect', () => {
+      console.log('disconnected');
+      setGameState('login');
+      setBoard([]);
+      setSelected([]);
+      setGameCode('');
+      setPlayers([]);
+      setYourName('');
+      setYourId('');
+      setStatusText('');
+
+      if (!toast.isActive('disconnectedError')) {
+        toast({
+          id: 'disconnectedError',
+          title: 'Disconnected from server 😢',
+          description:
+            "You've been disconnected from the server. Please try again.",
+          status: 'error',
+          duration: 3000,
+          isClosable: true,
+          icon: <MdReport />,
+        });
+      }
     });
 
     socket.on('startGame', gameState => {

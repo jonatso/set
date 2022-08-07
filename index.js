@@ -203,6 +203,7 @@ io.on("connection", (socket) => {
                     });
                 } else {
                     io.to(roomName).emit("gameEnded", socketToPoints);
+                    gameStates[roomName] = createGameState(); // make new game state for next game
                 }
 
                 io.to(roomName).emit("gameStateUpdate", {

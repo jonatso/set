@@ -82,6 +82,7 @@ function App() {
     setPlayers([]);
     setYourName('');
     setYourId('');
+    window.history.replaceState({}, '', '/');
   }
 
   function clickStart() {
@@ -96,6 +97,7 @@ function App() {
       setGameState('waitingRoom');
       setGameOwner(gameOwner);
       setYourId(id);
+      window.history.replaceState({}, '', `/${code}`);
     });
 
     socket.on('gameStarted', ({ board, socketToPoints }) => {
@@ -124,7 +126,7 @@ function App() {
       setYourName('');
       setYourId('');
       setStatusText('');
-
+      window.history.replaceState({}, '', '/');
       if (!toast.isActive('disconnectedError')) {
         toast({
           id: 'disconnectedError',

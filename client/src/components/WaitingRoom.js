@@ -92,8 +92,10 @@ export default function WaitingRoom({
                 {Object.keys(socketToPoints).length !== 0 && (
                   <Td>
                     {socketToPoints[player.id] || '-'}{' '}
-                    {socketToPoints[player.id] ===
-                      Math.max(...Object.values(socketToPoints)) && '🏆'}
+                    {socketToPoints[player.id] &&
+                      socketToPoints[player.id] ===
+                        Math.max(...Object.values(socketToPoints)) &&
+                      '🏆'}
                   </Td>
                 )}
               </Tr>

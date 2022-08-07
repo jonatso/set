@@ -55,6 +55,10 @@ function App() {
   }, []);
 
   useEffect(() => {
+    setSelected(board.map(() => false));
+  }, [board]);
+
+  useEffect(() => {
     yourIdRef.current = yourId; // update ref for use in socket.on('gameEnded')
   });
 

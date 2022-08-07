@@ -88,7 +88,8 @@ function fixBoard(board, deck) {
 
 function removeSelectedCards(board, selected) {
   //remove selected cards from board
-  for (let i = 12; i >= 0; i--) {
+
+  for (let i = selected.length - 1; i >= 0; i--) {
     if (selected[i]) {
       board.splice(i, 1);
     }

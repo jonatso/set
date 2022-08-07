@@ -31,6 +31,7 @@ export default function WaitingRoom({
   clickStart,
   gameOwner,
   yourId,
+  socketToPoints,
 }) {
   const toast = useToast();
   const isOwner = gameOwner === yourId;
@@ -74,6 +75,9 @@ export default function WaitingRoom({
               <Th>Name</Th>
               <Th>Id</Th>
               <Th>Is game owner</Th>
+              {Object.keys(socketToPoints).length !== 0 && (
+                <Th>Score last game</Th>
+              )}
             </Tr>
           </Thead>
           <Tbody>
@@ -85,6 +89,13 @@ export default function WaitingRoom({
                 <Td>{player.name}</Td>
                 <Td>{player.id}</Td>
                 <Td>{player.id === gameOwner ? 'yes' : 'no'}</Td>
+                {Object.keys(socketToPoints).length !== 0 && (
+                  <Td>
+                    {socketToPoints[player.id] || '-'}{' '}
+                    {socketToPoints[player.id] ===
+                      Math.max(...Object.values(socketToPoints)) && '🏆'}
+                  </Td>
+                )}
               </Tr>
             ))}
           </Tbody>

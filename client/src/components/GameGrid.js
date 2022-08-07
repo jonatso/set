@@ -25,7 +25,8 @@ export default function GameGrid({
   statusText,
   selected,
   toggleCard,
-  helpSelect,
+  cheatSelect,
+  semiCheatSelect,
   socketToPoints,
   players,
   yourId,
@@ -72,6 +73,14 @@ export default function GameGrid({
               }
             }}
           />
+          <Button
+            colorScheme="red"
+            rightIcon={<ImCross />}
+            width="fit-content"
+            onClick={clickLeave}
+          >
+            Leave room
+          </Button>
         </HStack>
         <TableContainer width={'fit-content'}>
           <Table variant="striped">
@@ -95,16 +104,11 @@ export default function GameGrid({
           </Table>
         </TableContainer>
         <ButtonGroup>
-          <Button colorScheme={'green'} onClick={helpSelect}>
-            Cheat...
+          <Button colorScheme={'green'} onClick={cheatSelect}>
+            Cheat
           </Button>
-          <Button
-            colorScheme="red"
-            rightIcon={<ImCross />}
-            width="fit-content"
-            onClick={clickLeave}
-          >
-            Leave room
+          <Button colorScheme={'green'} onClick={semiCheatSelect}>
+            SemiCheat
           </Button>
         </ButtonGroup>
       </VStack>

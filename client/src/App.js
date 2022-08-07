@@ -1,5 +1,11 @@
-import { useState, useEffect } from 'react';
-import { ChakraProvider, theme, Grid, useToast } from '@chakra-ui/react';
+import { useState, useEffect, useRef } from 'react';
+import {
+  ChakraProvider,
+  theme,
+  Grid,
+  useToast,
+  Button,
+} from '@chakra-ui/react';
 import { ColorModeSwitcher } from './ColorModeSwitcher';
 import { createDeck, findSet, makeBoard, isSet } from './logic/game';
 import SVGPatterns from './components/SVGPatterns';
@@ -9,7 +15,8 @@ import WaitingRoom from './components/WaitingRoom';
 import socketIOClient from 'socket.io-client';
 import { MdReport } from 'react-icons/md';
 import { IoLogoGameControllerA } from 'react-icons/io';
-const ENDPOINT = 'http://localhost:3001';
+const ENDPOINT = window.location.hostname + ':3001';
+console.log('ENDPOINT', ENDPOINT);
 var socket;
 
 if (!process.env.NODE_ENV || process.env.NODE_ENV === 'development') {
@@ -30,11 +37,14 @@ function App() {
   const [players, setPlayers] = useState([]);
   const [yourName, setYourName] = useState('');
   const [yourId, setYourId] = useState('');
+  const yourIdRef = useRef(yourId);
   const [statusText, setStatusText] = useState('');
   const [joinRoomError, setJoinRoomError] = useState('');
   const [gameOwner, setGameOwner] = useState('');
   const [socketToPoints, setSocketToPoints] = useState({});
   const toast = useToast();
+
+  console.log('socketToPoints', socketToPoints);
 
   useEffect(() => {
     const codeFromUrl = window.location.pathname.substring(1);
@@ -44,20 +54,21 @@ function App() {
     }
   }, []);
 
+  useEffect(() => {
+    yourIdRef.current = yourId; // update ref for use in socket.on('gameEnded')
+  });
+
   function clickJoin(roomName) {
-    console.log('clickJoin', roomName);
     socket.emit('joinGame', roomName);
     setJoinRoomError('');
   }
 
   function clickCreate() {
-    console.log('clickCreate');
     socket.emit('createGame');
     setJoinRoomError('');
   }
 
   function clickLeave() {
-    console.log('clickLeave');
     socket.emit('leaveGame');
     setJoinRoomError('');
     setBoard([]);
@@ -70,7 +81,6 @@ function App() {
   }
 
   function clickStart() {
-    console.log('clickStart');
     socket.emit('startGame');
   }
 
@@ -102,7 +112,6 @@ function App() {
     });
 
     socket.on('disconnect', () => {
-      console.log('disconnected');
       setGameState('login');
       setBoard([]);
       setSelected([]);
@@ -168,12 +177,15 @@ function App() {
 
     socket.on('gameEnded', socketToPoints => {
       setSocketToPoints(socketToPoints);
-      console.log('socketToPoints', socketToPoints);
+      setGameState('waitingRoom');
       if (!toast.isActive('gameEnded')) {
         toast({
           id: 'gameEnded',
           title: 'Game over! 🎉',
-          description: `Your score is: ${socketToPoints[yourId]}`,
+          description: `${
+            socketToPoints[yourIdRef.current] ===
+              Math.max(...Object.values(socketToPoints)) && 'Victory! '
+          } Your score is: ${socketToPoints[yourIdRef.current]}`,
           status: 'success',
           duration: 3000,
           isClosable: true,
@@ -181,6 +193,17 @@ function App() {
         });
       }
     });
+
+    return () => {
+      socket.off('gameJoined');
+      socket.off('gameStarted');
+      socket.off('gameStateUpdate');
+      socket.off('playersUpdate');
+      socket.off('opponentLeft');
+      socket.off('setAccepted');
+      socket.off('badCode');
+      socket.off('gameEnded');
+    };
   }, []);
 
   useEffect(() => {
@@ -208,7 +231,7 @@ function App() {
     } else {
       setStatusText('Must choose 3 cards.');
     }
-  }, [board, selected]);
+  }, [board, selected, toast]);
 
   return (
     <ChakraProvider theme={theme}>
@@ -227,7 +250,7 @@ function App() {
                 return newSelected;
               })
             }
-            helpSelect={() => {
+            cheatSelect={() => {
               setSelected(prevSelected => {
                 const newSelected = [...prevSelected];
                 newSelected.forEach((_, i) => {
@@ -237,6 +260,22 @@ function App() {
                 let solution = findSet(board);
                 if (solution) {
                   solution.forEach(idx => {
+                    newSelected[idx] = true;
+                  });
+                }
+                return newSelected;
+              });
+            }}
+            semiCheatSelect={() => {
+              setSelected(prevSelected => {
+                const newSelected = [...prevSelected];
+                newSelected.forEach((_, i) => {
+                  newSelected[i] = false;
+                });
+
+                let solution = findSet(board);
+                if (solution) {
+                  solution.slice(0, -1).forEach(idx => {
                     newSelected[idx] = true;
                   });
                 }
@@ -266,6 +305,7 @@ function App() {
             clickStart={clickStart}
             gameOwner={gameOwner}
             yourId={yourId}
+            socketToPoints={socketToPoints}
           />
         )}
       </Grid>

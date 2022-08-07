@@ -55,7 +55,52 @@ function makeBoard(deck) {
   for (let i = 0; i < 12; i++) {
     board.push(deck.pop());
   }
+  fixBoard(board, deck);
+
   return board;
 }
 
-export { createDeck, isSet, findSet, makeBoard };
+function fixBoard(board, deck) {
+  if (board.length < 12) {
+    console.log(`currently ${board.length} in board, adding 3`);
+    if (deck.length < 3) {
+      console.log('deck is empty...');
+      return false;
+    }
+    for (let i = 0; i < 3; i++) {
+      board.push(deck.pop());
+    }
+  }
+
+  while (!findSet(board)) {
+    if (deck.length < 3) {
+      console.log('deck is empty...');
+
+      return false;
+    }
+    console.log('no set, adding 3');
+    for (let i = 0; i < 3; i++) {
+      board.push(deck.pop());
+    }
+  }
+  return true;
+}
+
+function removeSelectedCards(board, selected) {
+  //remove selected cards from board
+
+  for (let i = selected.length - 1; i >= 0; i--) {
+    if (selected[i]) {
+      board.splice(i, 1);
+    }
+  }
+}
+
+module.exports = {
+  createDeck,
+  isSet,
+  findSet,
+  makeBoard,
+  fixBoard,
+  removeSelectedCards,
+};

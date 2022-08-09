@@ -40,7 +40,7 @@ function Game() {
   console.log('socketToPoints', socketToPoints);
 
   useEffect(() => {
-    const codeFromUrl = window.location.pathname.substring(1);
+    const codeFromUrl = window.location.search.slice(1);
 
     if (codeFromUrl) {
       clickJoin(codeFromUrl);
@@ -90,7 +90,7 @@ function Game() {
       setGameState('waitingRoom');
       setGameOwner(gameOwner);
       setYourId(id);
-      window.history.replaceState({}, '', `/${code}`);
+      window.history.replaceState({}, '', `/?${code}`);
     });
 
     socket.on('gameStarted', ({ board, socketToPoints }) => {

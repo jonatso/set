@@ -59,12 +59,12 @@ export default function GameGrid({
             width="fit-content"
             size={'sm'}
             onClick={() => {
-              navigator.clipboard.writeText(`localhost:3000/${gameCode}`);
+              navigator.clipboard.writeText(window.location.href);
               if (!toast.isActive('copyGameCode')) {
                 toast({
                   id: 'copyGameCode',
                   title: 'Copied to clipboard',
-                  description: `localhost:3000/${gameCode}`,
+                  description: window.location.href,
                   status: 'success',
                   duration: 2000,
                   isClosable: true,

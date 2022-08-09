@@ -39,8 +39,10 @@ function Game() {
   const [gameOwner, setGameOwner] = useState('');
   const [socketToPoints, setSocketToPoints] = useState({});
   const toast = useToast();
+  const [cheatEnabled, setCheatEnabled] = useState(CHEAT_ENABLED);
 
-  console.log('socketToPoints', socketToPoints);
+  window.toggleCheatEnabled = () =>
+    setCheatEnabled(prevCheatEnabled => !prevCheatEnabled); //for testing
 
   useEffect(() => {
     const codeFromUrl = window.location.search.slice(1);
@@ -286,7 +288,7 @@ function Game() {
           yourId={yourId}
           gameCode={gameCode}
           clickLeave={clickLeave}
-          cheatEnabled={CHEAT_ENABLED}
+          cheatEnabled={cheatEnabled}
         />
       )}
       {gameState === 'login' && (

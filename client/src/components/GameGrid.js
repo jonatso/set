@@ -32,6 +32,7 @@ export default function GameGrid({
   yourId,
   gameCode,
   clickLeave,
+  cheatEnabled,
 }) {
   const toast = useToast();
 
@@ -111,14 +112,16 @@ export default function GameGrid({
             </Tbody>
           </Table>
         </TableContainer>
-        <ButtonGroup>
-          <Button colorScheme={'green'} onClick={cheatSelect}>
-            Cheat
-          </Button>
-          <Button colorScheme={'green'} onClick={semiCheatSelect}>
-            SemiCheat
-          </Button>
-        </ButtonGroup>
+        {cheatEnabled && (
+          <ButtonGroup>
+            <Button colorScheme={'green'} onClick={cheatSelect}>
+              Cheat
+            </Button>
+            <Button colorScheme={'green'} onClick={semiCheatSelect}>
+              SemiCheat
+            </Button>
+          </ButtonGroup>
+        )}
       </VStack>
     </HStack>
   );

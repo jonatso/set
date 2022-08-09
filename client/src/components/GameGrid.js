@@ -1,7 +1,7 @@
 import {
   Grid,
   Button,
-  Text,
+  Avatar,
   HStack,
   Table,
   TableContainer,
@@ -86,6 +86,7 @@ export default function GameGrid({
           <Table variant="striped">
             <Thead>
               <Tr>
+                <Th>Picture</Th>
                 <Th>Name</Th>
                 <Th>Points</Th>
               </Tr>
@@ -96,6 +97,13 @@ export default function GameGrid({
                   fontWeight={player.id === yourId ? 'bold' : 'normal'}
                   key={player.id}
                 >
+                  <Td>
+                    <Avatar
+                      size={'sm'}
+                      src={`https://avatars.dicebear.com/api/pixel-art/${player.id}.svg
+                    `}
+                    />
+                  </Td>
                   <Td>{player.name}</Td>
                   <Td>{socketToPoints[player.id]}</Td>
                 </Tr>

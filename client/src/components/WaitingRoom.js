@@ -18,6 +18,7 @@ import {
   IconButton,
   HStack,
   ButtonGroup,
+  Avatar,
 } from '@chakra-ui/react';
 import { FaCopy, FaPlay, FaRegCopy } from 'react-icons/fa';
 
@@ -72,8 +73,9 @@ export default function WaitingRoom({
         <Table variant="striped">
           <Thead>
             <Tr>
+              <Th>Picture</Th>
               <Th>Name</Th>
-              <Th>Id</Th>
+              {/* <Th>Id</Th> */}
               <Th>Is game owner</Th>
               {Object.keys(socketToPoints).length !== 0 && (
                 <Th>Score last game</Th>
@@ -86,8 +88,15 @@ export default function WaitingRoom({
                 fontWeight={player.id === yourId ? 'bold' : 'normal'}
                 key={player.id}
               >
+                <Td>
+                  <Avatar
+                    size={'sm'}
+                    src={`https://avatars.dicebear.com/api/pixel-art/${player.id}.svg
+                    `}
+                  />
+                </Td>
                 <Td>{player.name}</Td>
-                <Td>{player.id}</Td>
+                {/* <Td>{player.id}</Td> */}
                 <Td>{player.id === gameOwner ? 'yes' : 'no'}</Td>
                 {Object.keys(socketToPoints).length !== 0 && (
                   <Td>

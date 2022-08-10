@@ -197,7 +197,9 @@ function Game() {
           title: 'Game over! 🎉',
           description: `${
             socketToPoints[yourIdRef.current] ===
-              Math.max(...Object.values(socketToPoints)) && 'Victory! '
+            Math.max(...Object.values(socketToPoints))
+              ? 'Victory! '
+              : ''
           } Your score is: ${socketToPoints[yourIdRef.current]}`,
           status: 'success',
           duration: 3000,

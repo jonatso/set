@@ -46,7 +46,13 @@ export default function GameGrid({
   console.log('sortedPlayers', sortedPlayers);
 
   return (
-    <HStack spacing={4} width="fit-content" justifySelf="center">
+    <HStack
+      spacing={4}
+      width="fit-content"
+      justifySelf="center"
+      alignItems={'start'}
+    >
+      <GameLog gameLog={gameLog} />
       <Grid templateColumns="repeat(3, 1fr)" gap={4} width={600}>
         {board.map((card, i) => (
           <GameCard
@@ -131,7 +137,6 @@ export default function GameGrid({
             </Button>
           </ButtonGroup>
         )}
-        <GameLog gameLog={gameLog} />
       </VStack>
     </HStack>
   );

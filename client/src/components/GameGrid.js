@@ -17,6 +17,7 @@ import {
   IconButton,
 } from '@chakra-ui/react';
 import GameCard from './GameCard';
+import GameLog from './GameLog';
 import { ImCross } from 'react-icons/im';
 import { FaCopy } from 'react-icons/fa';
 
@@ -33,8 +34,16 @@ export default function GameGrid({
   gameCode,
   clickLeave,
   cheatEnabled,
+  gameLog,
 }) {
   const toast = useToast();
+  const sortedPlayers = [...players].sort((a, b) =>
+    (socketToPoints[b.id] ?? 0) > (socketToPoints[a.id] ?? 0) ? 1 : -1
+  );
+
+  console.log('socketToPoints', socketToPoints);
+  console.log('players', players);
+  console.log('sortedPlayers', sortedPlayers);
 
   return (
     <HStack spacing={4} width="fit-content" justifySelf="center">
@@ -93,7 +102,7 @@ export default function GameGrid({
               </Tr>
             </Thead>
             <Tbody>
-              {players.map(player => (
+              {sortedPlayers.map(player => (
                 <Tr
                   fontWeight={player.id === yourId ? 'bold' : 'normal'}
                   key={player.id}
@@ -122,6 +131,7 @@ export default function GameGrid({
             </Button>
           </ButtonGroup>
         )}
+        <GameLog gameLog={gameLog} />
       </VStack>
     </HStack>
   );

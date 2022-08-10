@@ -38,6 +38,7 @@ function Game() {
   const [joinRoomError, setJoinRoomError] = useState('');
   const [gameOwner, setGameOwner] = useState('');
   const [socketToPoints, setSocketToPoints] = useState({});
+  const [gameLog, setGameLog] = useState([]);
   const toast = useToast();
   const [cheatEnabled, setCheatEnabled] = useState(CHEAT_ENABLED);
 
@@ -80,6 +81,9 @@ function Game() {
     setPlayers([]);
     setYourName('');
     setYourId('');
+    setGameOwner('');
+    setSocketToPoints({});
+    setGameLog([]);
     window.history.replaceState({}, '', '/');
   }
 
@@ -124,6 +128,9 @@ function Game() {
       setYourName('');
       setYourId('');
       setStatusText('');
+      setGameOwner('');
+      setSocketToPoints({});
+      setGameLog([]);
       window.history.replaceState({}, '', '/');
       if (!toast.isActive('disconnectedError')) {
         toast({
@@ -139,9 +146,10 @@ function Game() {
       }
     });
 
-    socket.on('gameStateUpdate', ({ board, socketToPoints }) => {
+    socket.on('gameStateUpdate', ({ board, socketToPoints, gameLog }) => {
       setBoard(board);
       setSocketToPoints(socketToPoints);
+      setGameLog(gameLog);
     });
 
     socket.on('playersUpdate', ({ players, gameOwner }) => {
@@ -182,6 +190,7 @@ function Game() {
     socket.on('gameEnded', socketToPoints => {
       setSocketToPoints(socketToPoints);
       setGameState('waitingRoom');
+      setGameLog([]);
       if (!toast.isActive('gameEnded')) {
         toast({
           id: 'gameEnded',
@@ -289,6 +298,7 @@ function Game() {
           gameCode={gameCode}
           clickLeave={clickLeave}
           cheatEnabled={cheatEnabled}
+          gameLog={gameLog}
         />
       )}
       {gameState === 'login' && (

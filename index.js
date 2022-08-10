@@ -96,6 +96,7 @@ io.on("connection", (socket) => {
             socket.broadcast.to(roomName).emit("gameStateUpdate", {
                 board: gameStates[roomName].board,
                 socketToPoints: gameStates[roomName].socketToPoints,
+                gameLog: gameStates[roomName].gameLog,
             });
         }
     }
@@ -189,17 +190,24 @@ io.on("connection", (socket) => {
         const roomName = socketToRoom[socket.id];
         const socketToPoints = gameStates[roomName].socketToPoints;
         const board = gameStates[roomName].board;
+        const gameLog = gameStates[roomName].gameLog;
 
         if (selected.filter((x) => x).length === 3) {
             const selectedCards = board.filter((_, i) => selected[i]);
             if (gameLogic.isSet(...selectedCards)) {
                 socketToPoints[socket.id] += 1;
+                gameLog.push({
+                    id: socket.id,
+                    cards: selectedCards,
+                });
+
                 socket.emit("setAccepted");
                 gameLogic.removeSelectedCards(board, selected);
                 if (gameLogic.fixBoard(board, gameStates[roomName].deck)) {
                     io.to(roomName).emit("gameStateUpdate", {
                         board,
                         socketToPoints,
+                        gameLog,
                     });
                 } else {
                     io.to(roomName).emit("gameEnded", socketToPoints);
@@ -209,6 +217,7 @@ io.on("connection", (socket) => {
                 io.to(roomName).emit("gameStateUpdate", {
                     board,
                     socketToPoints,
+                    gameLog,
                 });
             } else {
                 console.log("false set received");
@@ -266,5 +275,6 @@ function createGameState() {
         board,
         deck,
         isGameStarted: false,
+        gameLog: [],
     };
 }

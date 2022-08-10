@@ -1,6 +1,6 @@
 import { Flex } from '@chakra-ui/react';
 
-export default function CardImage({ card }) {
+export default function CardImage({ card, sizeMultiplier }) {
   const paths = [
     'M25 0 L50 50 L25 100 L0 50 Z',
     'M38.4,63.4c0,16.1,11,19.9,10.6,28.3c-0.5,9.2-21.1,12.2-33.4,3.8s-15.8-21.2-9.3-38c3.7-7.5,4.9-14,4.8-20 c0-16.1-11-19.9-10.6-28.3C1,0.1,21.6-3,33.9,5.5s15.8,21.2,9.3,38C40.4,50.6,38.5,57.4,38.4,63.4z',
@@ -12,18 +12,26 @@ export default function CardImage({ card }) {
   const fills = ['none', `url(#striped${card[1]})`, 'currentColor'];
 
   return (
-    <Flex justifyContent="center" alignItems="center" height={100}>
+    <Flex
+      justifyContent="center"
+      alignItems="center"
+      height={100 * (sizeMultiplier ?? 1)}
+      width={175 * (sizeMultiplier ?? 1)}
+      gap={3 * (sizeMultiplier ?? 1)}
+      py={10 * (sizeMultiplier ?? 1)}
+    >
       {Array.from({ length: card[3] + 1 }, (_, i) => (
         <svg
           // style={{
           //   border: 'dotted 2px pink',
           // }}
           color={colors[card[1]]}
-          height="100"
-          width="50"
-          transform="scale(.7)"
+          width={'22%'}
+          viewBox="0 0 50 100"
+          // transform={`scale(${0.7 * (sizeMultiplier ?? 1)})`}
           overflow={'visible'}
           key={i}
+          margin={0}
         >
           <path
             d={[paths[card[0]]]}

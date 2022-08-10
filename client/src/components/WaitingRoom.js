@@ -37,6 +37,10 @@ export default function WaitingRoom({
   const toast = useToast();
   const isOwner = gameOwner === yourId;
 
+  const sortedPlayers = [...players].sort((a, b) =>
+    (socketToPoints[b.id] ?? 0) > (socketToPoints[a.id] ?? 0) ? 1 : -1
+  );
+
   return (
     <Stack spacing={4} justifySelf="center">
       <Heading fontSize={'4xl'}>
@@ -83,7 +87,7 @@ export default function WaitingRoom({
             </Tr>
           </Thead>
           <Tbody>
-            {players.map(player => (
+            {sortedPlayers.map(player => (
               <Tr
                 fontWeight={player.id === yourId ? 'bold' : 'normal'}
                 key={player.id}

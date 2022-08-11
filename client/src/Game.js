@@ -32,7 +32,6 @@ function Game() {
   const [yourId, setYourId] = useState('');
   const yourIdRef = useRef(yourId);
   const [statusText, setStatusText] = useState('');
-  const [joinRoomError, setJoinRoomError] = useState('');
   const [gameOwner, setGameOwner] = useState('');
   const [socketToPoints, setSocketToPoints] = useState({});
   const [gameLog, setGameLog] = useState([]);
@@ -60,17 +59,14 @@ function Game() {
 
   function clickJoin(roomName) {
     socket.emit('joinGame', roomName);
-    setJoinRoomError('');
   }
 
   function clickCreate() {
     socket.emit('createGame');
-    setJoinRoomError('');
   }
 
   function clickLeave() {
     socket.emit('leaveGame');
-    setJoinRoomError('');
     setBoard([]);
     setGameState('login');
     setSelected([]);
@@ -180,7 +176,17 @@ function Game() {
     });
 
     socket.on('badCode', msg => {
-      setJoinRoomError(msg);
+      if (!toast.isActive('badCode')) {
+        toast({
+          id: 'badCode',
+          title: 'Error joining game',
+          description: msg,
+          status: 'error',
+          duration: 3000,
+          isClosable: true,
+          icon: <MdReport />,
+        });
+      }
     });
 
     socket.on('gameEnded', socketToPoints => {
@@ -300,11 +306,7 @@ function Game() {
         />
       )}
       {gameState === 'login' && (
-        <LoginCard
-          clickJoin={clickJoin}
-          clickCreate={clickCreate}
-          joinRoomError={joinRoomError}
-        />
+        <LoginCard clickJoin={clickJoin} clickCreate={clickCreate} />
       )}
       {gameState === 'waitingRoom' && (
         <WaitingRoom

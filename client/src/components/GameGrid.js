@@ -24,7 +24,6 @@ import { FaCopy } from 'react-icons/fa';
 
 export default function GameGrid({
   board,
-  statusText,
   selected,
   toggleCard,
   cheatSelect,
@@ -61,6 +60,7 @@ export default function GameGrid({
             isSelected={selected[i]}
             toggleCard={() => toggleCard(i)}
             key={i}
+            sizeMultiplier={isMobile ? 0.65 : 1}
           />
         ))}
       </Grid>
@@ -70,7 +70,6 @@ export default function GameGrid({
             {gameCode}
           </Heading>
           <IconButton
-            // colorScheme="teal"
             icon={<FaCopy />}
             width="fit-content"
             size={'sm'}

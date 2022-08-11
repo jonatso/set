@@ -9,19 +9,16 @@ import socketIOClient from 'socket.io-client';
 import { MdReport } from 'react-icons/md';
 import { IoLogoGameControllerA } from 'react-icons/io';
 const ENDPOINT = window.location.hostname + ':3001';
-console.log('ENDPOINT', ENDPOINT);
 var socket;
 var CHEAT_ENABLED;
 
 if (!process.env.NODE_ENV || process.env.NODE_ENV === 'development') {
   //for testing without express launch
   socket = socketIOClient(ENDPOINT);
-  console.log('dev');
   CHEAT_ENABLED = true;
 } else {
   //socket io finds port automatically if launched with express
   socket = socketIOClient();
-  console.log('prod');
   CHEAT_ENABLED = false;
 }
 
@@ -184,7 +181,6 @@ function Game() {
 
     socket.on('badCode', msg => {
       setJoinRoomError(msg);
-      console.log(msg);
     });
 
     socket.on('gameEnded', socketToPoints => {

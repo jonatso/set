@@ -42,10 +42,6 @@ export default function GameGrid({
     (socketToPoints[b.id] ?? 0) > (socketToPoints[a.id] ?? 0) ? 1 : -1
   );
 
-  console.log('socketToPoints', socketToPoints);
-  console.log('players', players);
-  console.log('sortedPlayers', sortedPlayers);
-
   return (
     <Stack
       spacing={4}

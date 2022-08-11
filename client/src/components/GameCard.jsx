@@ -5,7 +5,7 @@ export default function GameCard({card, toggleCard, isSelected, sizeMultiplier})
     return (
         <GridItem
             w="100%"
-            style={{aspectRatio: "3/2"}}
+            style={{aspectRatio: "5/3"}}
             bg={useColorModeValue('grey.100', 'gray.900')}
             borderRadius={!sizeMultiplier || sizeMultiplier > 0.7 ? 'lg' : sizeMultiplier > 0.25 ? 'md' : 'sm'}
             borderColor={useColorModeValue(isSelected ? "black" : 'gray.400' , isSelected ? "white" : 'gray.700')}

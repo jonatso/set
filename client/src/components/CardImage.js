@@ -17,8 +17,6 @@ export default function CardImage({ card, sizeMultiplier }) {
       alignItems="center"
       height="100%"
       width="100%"
-      gap={3 * (sizeMultiplier ?? 1)}
-      py={10 * (sizeMultiplier ?? 1)}
     >
       {Array.from({ length: card[3] + 1 }, (_, i) => (
         <svg
@@ -27,7 +25,7 @@ export default function CardImage({ card, sizeMultiplier }) {
           // }}
           color={colors[card[1]]}
           width={'22%'}
-          viewBox="0 0 50 100"
+          viewBox="-10 0 60 100" //10 margin on each side (0 0 50 100)
           // transform={`scale(${0.7 * (sizeMultiplier ?? 1)})`}
           overflow={'visible'}
           key={i}

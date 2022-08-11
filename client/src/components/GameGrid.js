@@ -49,10 +49,11 @@ export default function GameGrid({
 
       <Grid
         templateColumns="repeat(3, 1fr)"
-        gap={2}
+        gap={isMobile ? 2 : 4}
         flex={1}
         maxWidth="650px"
         minWidth="40%"
+        maxHeight="85vh"
       >
         {board.map((card, i) => (
           <GameCard

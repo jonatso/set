@@ -91,6 +91,7 @@ io.on("connection", (socket) => {
             socket.emit("gameStarted", {
                 board: gameStates[roomName].board,
                 socketToPoints: gameStates[roomName].socketToPoints,
+                gameLog: gameStates[roomName].gameLog,
             });
 
             socket.broadcast.to(roomName).emit("gameStateUpdate", {
@@ -182,6 +183,7 @@ io.on("connection", (socket) => {
         io.to(roomName).emit("gameStarted", {
             board: gameStates[roomName].board,
             socketToPoints,
+            gameLog: gameStates[roomName].gameLog,
         });
     }
 

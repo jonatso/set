@@ -95,10 +95,11 @@ function Game() {
       window.history.replaceState({}, '', `/?${code}`);
     });
 
-    socket.on('gameStarted', ({ board, socketToPoints }) => {
+    socket.on('gameStarted', ({ board, socketToPoints, gameLog }) => {
       setBoard(board);
       setGameState('inGame');
       setSocketToPoints(socketToPoints);
+      setGameLog(gameLog);
       if (!toast.isActive('gameStarted')) {
         toast({
           id: 'gameStarted',

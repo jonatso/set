@@ -3,7 +3,7 @@ import {
   Button,
   Avatar,
   HStack,
-  Stack,
+  Flex,
   Table,
   TableContainer,
   Thead,
@@ -36,6 +36,7 @@ export default function GameGrid({
   clickLeave,
   cheatEnabled,
   gameLog,
+  isMobile,
 }) {
   const toast = useToast();
   const sortedPlayers = [...players].sort((a, b) =>
@@ -43,15 +44,16 @@ export default function GameGrid({
   );
 
   return (
-    <Stack
-      spacing={4}
-      width="fit-content"
-      justifySelf="center"
-      alignItems={'start'}
-      direction={['column', 'row']}
-    >
-      <GameLog gameLog={gameLog} />
-      <Grid templateColumns="repeat(3, 1fr)" gap={4} width={600}>
+    <Flex wrap={'wrap'} gap={2} justify="center">
+      {!isMobile && <GameLog gameLog={gameLog} />}
+
+      <Grid
+        templateColumns="repeat(3, 1fr)"
+        gap={2}
+        flex={1}
+        maxWidth="650px"
+        minWidth="40%"
+      >
         {board.map((card, i) => (
           <GameCard
             card={card}
@@ -62,7 +64,6 @@ export default function GameGrid({
         ))}
       </Grid>
       <VStack>
-        <Heading fontSize={'4xl'}>Game is running!</Heading>
         <HStack>
           <Heading fontSize={'lg'} color="red">
             {gameCode}
@@ -97,7 +98,10 @@ export default function GameGrid({
           </Button>
         </HStack>
         <TableContainer width={'fit-content'}>
-          <Table variant="striped">
+          <Table
+            variant="striped"
+            size={isMobile || players.length > 4 ? 'sm' : 'md'}
+          >
             <Thead>
               <Tr>
                 <Th>Picture</Th>
@@ -137,6 +141,6 @@ export default function GameGrid({
           </ButtonGroup>
         )}
       </VStack>
-    </Stack>
+    </Flex>
   );
 }

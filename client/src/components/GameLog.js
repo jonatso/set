@@ -24,7 +24,7 @@ export default function GameLog({ gameLog, yourId }) {
   }, [gameLog]);
 
   return (
-    <TableContainer width={'fit-content'} height="470px" overflowY={'scroll'}>
+    <TableContainer maxHeight="470px" overflowY={'scroll'} width={'270px'}>
       <Table variant="striped" size={'sm'}>
         <Thead
           position={'sticky'}

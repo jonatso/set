@@ -33,6 +33,7 @@ export default function WaitingRoom({
   gameOwner,
   yourId,
   socketToPoints,
+  isMobile,
 }) {
   const toast = useToast();
   const isOwner = gameOwner === yourId;
@@ -43,9 +44,7 @@ export default function WaitingRoom({
 
   return (
     <Stack spacing={4} justifySelf="center">
-      <Heading fontSize={'4xl'}>
-        Welcome to the Waiting Room, {yourName}
-      </Heading>
+      <Heading fontSize={'4xl'}>Waiting Room</Heading>
       <HStack>
         <Heading fontSize={'lg'}>Game Code:</Heading>
         <Heading fontSize={'lg'} color="red">
@@ -74,16 +73,17 @@ export default function WaitingRoom({
       </HStack>
 
       <TableContainer width={'fit-content'}>
-        <Table variant="striped">
+        <Table
+          variant="striped"
+          size={isMobile || players.length > 4 ? 'sm' : 'md'}
+        >
           <Thead>
             <Tr>
               <Th>Picture</Th>
               <Th>Name</Th>
               {/* <Th>Id</Th> */}
-              <Th>Is game owner</Th>
-              {Object.keys(socketToPoints).length !== 0 && (
-                <Th>Score last game</Th>
-              )}
+              <Th>Owner?</Th>
+              {Object.keys(socketToPoints).length !== 0 && <Th>Last score</Th>}
             </Tr>
           </Thead>
           <Tbody>

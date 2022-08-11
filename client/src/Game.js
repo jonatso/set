@@ -37,6 +37,17 @@ function Game() {
   const [gameLog, setGameLog] = useState([]);
   const toast = useToast();
   const [cheatEnabled, setCheatEnabled] = useState(CHEAT_ENABLED);
+  const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
+
+  const handleResize = () => {
+    setIsMobile(window.innerWidth < 768);
+  };
+
+  useEffect(() => {
+    window.addEventListener('resize', () => handleResize);
+
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   window.toggleCheatEnabled = () =>
     setCheatEnabled(prevCheatEnabled => !prevCheatEnabled); //for testing
@@ -252,7 +263,7 @@ function Game() {
   }, [board, selected, toast]);
 
   return (
-    <Box p={4}>
+    <Box p={3}>
       {gameState === 'inGame' && (
         <GameGrid
           board={board}
@@ -304,6 +315,7 @@ function Game() {
           clickLeave={clickLeave}
           cheatEnabled={cheatEnabled}
           gameLog={gameLog}
+          isMobile={isMobile}
         />
       )}
       {gameState === 'login' && (
@@ -319,6 +331,7 @@ function Game() {
           gameOwner={gameOwner}
           yourId={yourId}
           socketToPoints={socketToPoints}
+          isMobile={isMobile}
         />
       )}
     </Box>

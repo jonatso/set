@@ -11,9 +11,7 @@ function App() {
     <ChakraProvider theme={theme}>
       <SVGPatterns />
       <Nav />
-      <Box p={4}>
-        <Game />
-      </Box>
+      <Game />
     </ChakraProvider>
   );
 }

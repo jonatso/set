@@ -15,8 +15,8 @@ export default function CardImage({ card, sizeMultiplier }) {
     <Flex
       justifyContent="center"
       alignItems="center"
-      height={100 * (sizeMultiplier ?? 1)}
-      width={175 * (sizeMultiplier ?? 1)}
+      height="100%"
+      width="100%"
       gap={3 * (sizeMultiplier ?? 1)}
       py={10 * (sizeMultiplier ?? 1)}
     >

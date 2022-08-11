@@ -4,7 +4,6 @@ import {
   Avatar,
   Table,
   TableContainer,
-  TableCaption,
   Thead,
   Tr,
   Th,
@@ -43,12 +42,16 @@ export default function GameLog({ gameLog, yourId }) {
         </Thead>
         <Tbody>
           {gameLog.map((logItem, i) => (
-            <Tr fontWeight={logItem.id === yourId ? 'bold' : 'normal'} key={i}>
+            <Tr
+              fontWeight={logItem.player.id === yourId ? 'bold' : 'normal'}
+              key={i}
+            >
               <Td>
                 <Avatar
                   size="xs"
-                  src={`https://avatars.dicebear.com/api/pixel-art/${logItem.id}.svg
+                  src={`https://avatars.dicebear.com/api/pixel-art/${logItem.player.id}.svg
                     `}
+                  name={logItem.player.name}
                 />
               </Td>
               {/*scale parent to fit child*/}

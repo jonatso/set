@@ -3,6 +3,7 @@ import {
   Button,
   Avatar,
   HStack,
+  Stack,
   Table,
   TableContainer,
   Thead,
@@ -46,11 +47,12 @@ export default function GameGrid({
   console.log('sortedPlayers', sortedPlayers);
 
   return (
-    <HStack
+    <Stack
       spacing={4}
       width="fit-content"
       justifySelf="center"
       alignItems={'start'}
+      direction={['column', 'row']}
     >
       <GameLog gameLog={gameLog} />
       <Grid templateColumns="repeat(3, 1fr)" gap={4} width={600}>
@@ -118,6 +120,7 @@ export default function GameGrid({
                       size={'sm'}
                       src={`https://avatars.dicebear.com/api/pixel-art/${player.id}.svg
                     `}
+                      name={player.name}
                     />
                   </Td>
                   <Td>{player.name}</Td>
@@ -138,6 +141,6 @@ export default function GameGrid({
           </ButtonGroup>
         )}
       </VStack>
-    </HStack>
+    </Stack>
   );
 }

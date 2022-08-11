@@ -97,6 +97,7 @@ export default function WaitingRoom({
                     size={'sm'}
                     src={`https://avatars.dicebear.com/api/pixel-art/${player.id}.svg
                     `}
+                    name={player.name}
                   />
                 </Td>
                 <Td>{player.name}</Td>

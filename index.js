@@ -197,7 +197,10 @@ io.on("connection", (socket) => {
             if (gameLogic.isSet(...selectedCards)) {
                 socketToPoints[socket.id] += 1;
                 gameLog.push({
-                    id: socket.id,
+                    player: {
+                        id: socket.id,
+                        name: socketToName[socket.id],
+                    },
                     cards: selectedCards,
                 });
 

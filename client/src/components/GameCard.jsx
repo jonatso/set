@@ -13,14 +13,14 @@ export default function GameCard({card, toggleCard, isSelected, sizeMultiplier})
             borderStyle="solid"
             textAlign="center"
             onClick={toggleCard}
-            cursor="pointer"
+            cursor={toggleCard ? "pointer" : "default"}
             transform={isSelected ? 'scale(1.06)' : 'scale(1)'}
-            _hover={
+            _hover={ toggleCard ?
                 {
                     boxShadow: !sizeMultiplier || sizeMultiplier > 0.7 ? 'lg' : sizeMultiplier > 0.25 ? 'md' : 'sm',
                     transform: isSelected ? 'scale(1.06)' : 'scale(1.04)',
                     transition: 'all 0.05s ease-in-out',
-                }
+                } : {}
             }
           >
               <CardImage card={card} sizeMultiplier={sizeMultiplier}/>

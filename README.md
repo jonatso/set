@@ -1,5 +1,5 @@
 # Set
-Set is a web game clone of the card game Set. Created with React, Chakra UI, Node.js and Socket.IO. Set is hosted and automatically deployed to [Heroku](https://setgame.tech).
+Set is a web game clone of the card game Set. Created with React, Chakra UI, Node.js and Socket.IO. Set is hosted and automatically deployed to [Heroku](http://setgame.tech).
 
 [![set-pc.jpg](https://i.postimg.cc/wxcT0mCS/set-pc.jpg)](https://postimg.cc/t7JjgYC5)
 

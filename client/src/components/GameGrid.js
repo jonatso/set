@@ -43,7 +43,7 @@ export default function GameGrid({
   );
 
   return (
-    <Flex wrap={'wrap'} gap={2} justify="center">
+    <Flex wrap={'wrap'} gap={2} justify="space-around">
       {!isMobile && <GameLog gameLog={gameLog} />}
 
       <Grid

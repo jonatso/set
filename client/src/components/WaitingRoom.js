@@ -105,11 +105,10 @@ export default function WaitingRoom({
                 <Td>{player.id === gameOwner ? 'yes' : 'no'}</Td>
                 {Object.keys(socketToPoints).length !== 0 && (
                   <Td>
-                    {socketToPoints[player.id] || '-'}{' '}
-                    {socketToPoints[player.id] &&
-                      socketToPoints[player.id] ===
-                        Math.max(...Object.values(socketToPoints)) &&
-                      '🏆'}
+                    {socketToPoints[player.id] ?? '-'}
+
+                    {socketToPoints[player.id] ===
+                      Math.max(...Object.values(socketToPoints)) && '🏆'}
                   </Td>
                 )}
               </Tr>

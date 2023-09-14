@@ -5,8 +5,10 @@ const cors = require("cors");
 const { Server } = require("socket.io");
 const helpers = require("./helpers.js");
 const gameLogic = require("./client/src/logic/game.js");
+const PORT = process.env.PORT || 3001;
 app.use(cors());
 app.use(express.static("client/build"));
+
 
 const server = http.createServer(app);
 var _ = require("lodash");
@@ -258,8 +260,8 @@ io.on("connection", (socket) => {
     }
 });
 
-server.listen(process.env.PORT || 3001, () => {
-    console.log("Server is running on port 3001");
+server.listen(PORT, () => {
+    console.log(`listening on *:${PORT}`);
 });
 
 function makeid(length) {
